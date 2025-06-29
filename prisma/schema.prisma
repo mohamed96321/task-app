@@ -1,0 +1,48 @@
+model Region {
+  region_id       Int                  @id @default(autoincrement())
+  capital_city_id Int
+  code            String               @unique
+  population      Int
+
+  cities          City[]
+  translations    RegionTranslation[]
+}
+
+model RegionTranslation {
+  id        Int     @id @default(autoincrement())
+  region_id Int
+  language  String
+  name      String
+
+  region    Region  @relation(fields: [region_id], references: [region_id])
+  @@unique([region_id, language]) // one translation per language per region
+}
+
+model City {
+  city_id   Int                @id @default(autoincrement())
+  region_id Int
+  region    Region             @relation(fields: [region_id], references: [region_id])
+
+  translations CityTranslation[]
+  users        User[]
+}
+
+model CityTranslation {
+  id       Int    @id @default(autoincrement())
+  city_id  Int
+  language String
+  name     String
+
+  city     City   @relation(fields: [city_id], references: [city_id])
+  @@unique([city_id, language])
+}
+
+model User {
+  id         Int    @id @default(autoincrement())
+  first_name String
+  last_name  String
+  email      String @unique
+  password   String
+  city_id    Int
+  city       City   @relation(fields: [city_id], references: [city_id])
+}
