@@ -16,7 +16,10 @@ import { RegionsModule } from './regions/regions.module';
       validationSchema,
       cache: true,
       expandVariables: true,
-      validationOptions: { allowUnknown: false, abortEarly: true },
+      validationOptions: {
+        allowUnknown: true,
+        abortEarly: true,
+      },
     }),
 
     PrismaModule,

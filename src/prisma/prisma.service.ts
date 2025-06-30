@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Injectable, OnModuleInit, INestApplication } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { Injectable, INestApplication, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   }
 
   enableShutdownHooks(app: INestApplication) {
-    this.$on('beforeExit', async () => {
+    this.$on('beforeExit' as Parameters<PrismaClient['$on']>[0], async () => {
       await app.close();
     });
   }
