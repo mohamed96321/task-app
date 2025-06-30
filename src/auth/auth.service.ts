@@ -16,7 +16,11 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, pass: string) {
-    const u = await this.users.findByEmail(email);
+    const u = (await this.users.findByEmail(email)) as {
+      id: number;
+      email: string;
+      password: string;
+    } | null;
     if (u && (await bcrypt.compare(pass, u.password))) {
       const { password, ...rest } = u;
       return rest;
@@ -24,17 +28,25 @@ export class AuthService {
     throw new UnauthorizedException();
   }
 
-  async login(user: any) {
+  login(user: { id: number; email: string }) {
     return {
       access_token: this.jwt.sign({ sub: user.id, email: user.email }),
     };
   }
 
   async register(dto: CreateUserDto) {
-    const existing = await this.users.findByEmail(dto.email);
+    const existing = (await this.users.findByEmail(dto.email)) as {
+      id: number;
+      email: string;
+      password: string;
+    } | null;
     if (existing) throw new ConflictException('Email already exists');
 
-    const user = await this.users.create(dto);
+    const user = (await this.users.create(dto)) as {
+      id: number;
+      email: string;
+      password: string;
+    };
     const { password, ...result } = user;
 
     return {

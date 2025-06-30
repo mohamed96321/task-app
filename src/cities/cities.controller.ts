@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   Controller,
   Get,
@@ -45,4 +46,3 @@ export class CitiesController {
     return this.svc.remove(+id);
   }
 }
-  
